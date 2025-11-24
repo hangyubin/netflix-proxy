@@ -1,66 +1,73 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Netflix视频浏览器 - GitHub部署版</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Netflix代理测试</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .result { background: #f5f5f5; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        button { padding: 10px 20px; margin: 5px; }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🎬 Netflix视频浏览器</h1>
-            <p class="subtitle">GitHub + Netlify 一键部署版</p>
-        </header>
-        
-        <div class="control-panel">
-            <div class="input-group">
-                <label>分类选择:</label>
-                <select id="category-select">
-                    <option value="netflix_movies">Netflix电影</option>
-                    <option value="netflix_series">Netflix剧集</option>
-                    <option value="popular_movies">热门电影</option>
-                    <option value="tv_series">电视剧</option>
-                </select>
-            </div>
-            
-            <div class="input-group">
-                <label>搜索影片:</label>
-                <input type="text" id="search-input" placeholder="输入影片名称搜索">
-            </div>
-            
-            <button onclick="filterMovies()">🔍 搜索筛选</button>
-            <button onclick="resetView()">🔄 重置视图</button>
-        </div>
-        
-        <div class="content">
-            <div class="movies-panel">
-                <div class="section-title">📋 视频列表</div>
-                <div id="list-status" class="status info">
-                    ✅ 本地数据加载完成
-                </div>
-                <div id="movies-container" class="movies-grid">
-                    <!-- 电影列表将在这里显示 -->
-                </div>
-            </div>
-            
-            <div class="detail-panel">
-                <div class="section-title">📄 视频详情</div>
-                <div id="detail-content">
-                    <div class="empty-state">
-                        <h3>欢迎使用Netflix视频浏览器</h3>
-                        <p>点击左侧影片查看详细信息</p>
-                        <p>🎯 基于GitHub Pages + Netlify部署</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <footer>
-            <p>🚀 部署于 Netlify | 📧 数据来源: 本地模拟数据</p>
-        </footer>
+    <h1>🎬 Netflix代理服务器测试</h1>
+    <p>部署在Netlify Functions上的代理服务</p>
+    
+    <div>
+        <button onclick="testHealth()">测试健康检查</button>
+        <button onclick="testMovieList()">测试电影列表</button>
+        <button onclick="testMovieDetail()">测试电影详情</button>
     </div>
+    
+    <div id="result"></div>
 
-    <script src="script.js"></script>
+    <script>
+        const BASE_URL = window.location.origin;
+        
+        async function testHealth() {
+            showResult('测试健康检查...');
+            try {
+                const response = await fetch(`${BASE_URL}/api?ac=health`);
+                const data = await response.json();
+                showResult('✅ 健康检查成功:', data);
+            } catch (error) {
+                showResult('❌ 健康检查失败:', error);
+            }
+        }
+        
+        async function testMovieList() {
+            showResult('获取电影列表...');
+            try {
+                const response = await fetch(`${BASE_URL}/api?ac=list&t=71&pg=1`);
+                const data = await response.json();
+                showResult('✅ 电影列表成功:', data);
+            } catch (error) {
+                showResult('❌ 电影列表失败:', error);
+            }
+        }
+        
+        async function testMovieDetail() {
+            showResult('获取电影详情...');
+            try {
+                const response = await fetch(`${BASE_URL}/api?ac=detail&ids=128042`);
+                const data = await response.json();
+                showResult('✅ 电影详情成功:', data);
+            } catch (error) {
+                showResult('❌ 电影详情失败:', error);
+            }
+        }
+        
+        function showResult(message, data = null) {
+            const resultDiv = document.getElementById('result');
+            let html = `<div class="result"><strong>${message}</strong>`;
+            if (data) {
+                html += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            }
+            html += '</div>';
+            resultDiv.innerHTML = html;
+        }
+        
+        // 页面加载时显示基本信息
+        showResult(`代理服务器基础URL: ${BASE_URL}`);
+    </script>
 </body>
 </html>
