@@ -1,73 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Netflix代理测试</title>
-    <style>
-        body { font-family: Arial; padding: 20px; }
-        .result { background: #f5f5f5; padding: 15px; margin: 10px 0; border-radius: 5px; }
-        button { padding: 10px 20px; margin: 5px; }
-    </style>
+    <title>Netflix代理服务器</title>
 </head>
 <body>
-    <h1>🎬 Netflix代理服务器测试</h1>
-    <p>部署在Netlify Functions上的代理服务</p>
-    
-    <div>
-        <button onclick="testHealth()">测试健康检查</button>
-        <button onclick="testMovieList()">测试电影列表</button>
-        <button onclick="testMovieDetail()">测试电影详情</button>
-    </div>
-    
-    <div id="result"></div>
-
-    <script>
-        const BASE_URL = window.location.origin;
-        
-        async function testHealth() {
-            showResult('测试健康检查...');
-            try {
-                const response = await fetch(`${BASE_URL}/api?ac=health`);
-                const data = await response.json();
-                showResult('✅ 健康检查成功:', data);
-            } catch (error) {
-                showResult('❌ 健康检查失败:', error);
-            }
-        }
-        
-        async function testMovieList() {
-            showResult('获取电影列表...');
-            try {
-                const response = await fetch(`${BASE_URL}/api?ac=list&t=71&pg=1`);
-                const data = await response.json();
-                showResult('✅ 电影列表成功:', data);
-            } catch (error) {
-                showResult('❌ 电影列表失败:', error);
-            }
-        }
-        
-        async function testMovieDetail() {
-            showResult('获取电影详情...');
-            try {
-                const response = await fetch(`${BASE_URL}/api?ac=detail&ids=128042`);
-                const data = await response.json();
-                showResult('✅ 电影详情成功:', data);
-            } catch (error) {
-                showResult('❌ 电影详情失败:', error);
-            }
-        }
-        
-        function showResult(message, data = null) {
-            const resultDiv = document.getElementById('result');
-            let html = `<div class="result"><strong>${message}</strong>`;
-            if (data) {
-                html += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
-            }
-            html += '</div>';
-            resultDiv.innerHTML = html;
-        }
-        
-        // 页面加载时显示基本信息
-        showResult(`代理服务器基础URL: ${BASE_URL}`);
-    </script>
+    <h1>✅ Netflix代理服务器运行中</h1>
+    <p>代理端点：<code>/api?ac=list&t=71</code></p>
 </body>
 </html>
